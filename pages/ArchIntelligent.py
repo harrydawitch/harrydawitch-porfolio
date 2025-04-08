@@ -5,6 +5,9 @@ st.set_page_config(
                     page_title="Projects | ArchIntelligent",
                     layout= 'wide',
                     )
+@st.cache_data
+def load_image(path):
+    return Image.open(path)
 
 st.title(":red[Arch]Intelligent")
 st.markdown(
@@ -39,7 +42,7 @@ with st.container(border= True):
     It assists architects throughout their workflow, helping them save time, explore new ideas faster, and boost their creativity.
     """)
 
-    overview_img = Image.open("assets/images/meme1.png")
+    overview_img = load_image("assets/images/meme1.png")
     st.image(overview_img, use_container_width=False, width= 700)
 
 c1, c2= st.columns([0.4,0.6], border= True)
@@ -70,7 +73,7 @@ with c2:
     Architects juggle so many tasks on a daily basis. Let’s take a look:
     """)
 
-    st.image(image="assets/images/architect_workflow.png", width= 550)
+    st.image(image=load_image("assets/images/architect_workflow.png"), width= 550)
 
     st.markdown("""
     And the list goes on...

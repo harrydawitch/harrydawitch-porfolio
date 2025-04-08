@@ -8,13 +8,16 @@ st.set_page_config(
                     page_title="HarryDaWitch",
                     layout= 'wide',
                     )
+@st.cache_data
+def load_image(path):
+    return Image.open(path)
 
 st.title(":blue[About Me]")
 
 col1, col2= st.columns([0.5, 0.8], gap='small', vertical_alignment= 'center')
 
 with col1:
-    st.image(image= "assets/images/harrydawitch.png", use_container_width= True)
+    st.image(image= load_image("assets/images/harrydawitch.png"), use_container_width= True)
     
 with col2:
     st.title("Chu Hoang Thien Long")
@@ -130,8 +133,8 @@ with tab1:
     
     with p1_1:
         image_comparison(
-                        img1="assets/images/image_1.jpg",
-                        img2="assets/images/image_2.png",
+                        img1=load_image("assets/images/image_1.jpg"),
+                        img2=load_image("assets/images/image_2.png"),
                         label1="Before",
                         label2="After",
                         width= 512
@@ -314,7 +317,7 @@ st.write("\n")
 st.write("\n")
 
 # Load university logo
-iuh_logo = Image.open("assets/images/Logo-IUH.jpg")  # Replace with the correct path to your logo image
+iuh_logo = load_image("assets/images/Logo-IUH.jpg")  # Replace with the correct path to your logo image
 
 # --- Column layout for university ---
 col1, col2 = st.columns([1, 8])
@@ -332,7 +335,7 @@ st.markdown("---")
 # --- Online Learning ---
 col3, col4 = st.columns([1, 8])
 with col3:
-    st.image("assets/images/online_study.jpg", width=80)  # Add an icon or placeholder image
+    st.image(load_image("assets/images/online_study.jpg"), width=80)  # Add an icon or placeholder image
 with col4:
     st.markdown("**Online Learning**")
     st.markdown("*Self-taught in AI, ML, and Data Engineering*")
