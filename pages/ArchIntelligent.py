@@ -6,29 +6,6 @@ st.set_page_config(
                     page_title="Projects | ArchIntelligent",
                     layout= 'wide',
                     )
-@st.cache_data
-def load_image(path):
-    return Image.open(path)
-
-# Cache the data loading function
-@st.cache_data
-def load_building_data():
-    data = {
-        "Buildings": ["Building 1", "Building 2", "Building 3"],
-        "image_url": [
-            "*img1_url, img2_url, img3_url…",
-            "*img1_url, img2_url, img3_url…",
-            "*img1_url, img2_url, img3_url…"
-        ],
-        "article_texts": [
-            "Sand and Soil, located in Jogjakarta…",
-            "The villa's architecture is thoughtfully…",
-            "Inside the highlands of eastern Antioquia…"
-        ],
-        "Functional": ["Apartment", "Villa", "Office"],
-        "Style": ["Sustainable", "Minimalism", "Modern"]
-    }
-    return pd.DataFrame(data)
 
 st.title(":red[Arch]Intelligent")
 st.markdown(
@@ -94,8 +71,7 @@ with c2:
     Architects handle so many tasks on a daily basis. click the button below to see:
     """)
 
-    expanded= st.expander(label= "**Click to see!**", expanded= False)
-    expanded.image(image=load_image("assets/images/architect_workflow.png"), width= 550)
+    st.image(image="assets/images/architect_workflow.png", width= 550)
 
     st.markdown("""
     And the list goes on...
