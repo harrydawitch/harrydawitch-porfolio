@@ -7,6 +7,29 @@ st.set_page_config(
                     layout= 'wide',
                     )
 
+@st.cache_data
+def load_image(path):
+    return Image.open(path)
+
+@st.cache_data
+def load_building_data():
+    data = {
+        "Buildings": ["Building 1", "Building 2", "Building 3"],
+        "image_url": [
+            "*img1_url, img2_url, img3_url…",
+            "*img1_url, img2_url, img3_url…",
+            "*img1_url, img2_url, img3_url…"
+        ],
+        "article_texts": [
+            "Sand and Soil, located in Jogjakarta…",
+            "The villa's architecture is thoughtfully…",
+            "Inside the highlands of eastern Antioquia…"
+        ],
+        "Functional": ["Apartment", "Villa", "Office"],
+        "Style": ["Sustainable", "Minimalism", "Modern"]
+    }
+    return pd.DataFrame(data)
+
 st.title(":red[Arch]Intelligent")
 st.markdown(
     """
