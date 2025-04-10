@@ -123,7 +123,7 @@ with st.container(border= True):
     Fortunately, I’d already built a strong foundation in machine/deep learning concepts through my previous project, **DeepNum**. I had the tools—I just needed to figure out how to use them to build something new.
     """)
 
-    st.subheader("1. Research the Problem")
+    st.subheader(":blue[1. Research the Problem]")
 
     st.write("""
     I began by searching and reading a lot of papers on AI architecture on the internet. But none of those came close to addressing my problem. Through this process, I discovered there are two main types of models used in image generation:
@@ -164,7 +164,7 @@ with st.container(border= True):
     
     st.markdown("---")
 
-    st.subheader("📦 2. Collecting, Preprocessing & Annotating Data")
+    st.subheader(":blue[2. Collecting, Preprocessing & Annotating Data]")
 
     st.write("""
     Cool! I finally had a direction. Now what?
@@ -281,3 +281,124 @@ with st.container(border= True):
 
     Each building folder containing multiple images from different angles and environments. While the **Architecture Language** and **Client Needs** stayed the same across images of the same building, the **General Description** varied depending on the image angle, lighting, and surroundings.
     """)
+    
+    st.markdown("---")
+    st.subheader(":blue[3. Model Development]")
+
+    st.write("The next step?")
+    st.markdown("""Training a model to generate high-quality exterior architectural images based on a single text prompt.
+                And to do that, I had to figure out how to **fine-tune Stable Diffusion,** arguably one of the most powerful image generation models out there.""")
+    st.write("But… where the heck do I even start?")
+
+    # Understanding the Tools
+    st.markdown("#### **Understanding the Tools**")
+    st.write("I couldn’t just use the model as a black box without understanding how it worked. So… I spent another 3 weeks to read Stable Diffusion, LoRA, ControlNet papers, watching Youtube explanation.")
+
+    st.write("Eventually, I felt confident enough to build with them. I’ll be writing a detailed blog post series breaking these models down later, but here’s the TL;DR of what I learned:")
+
+    st.markdown("""
+    1. **Stable Diffusion XL:** The base model for image generation. Open-source, powerful, and widely supported by the community.  
+    2. **LoRA (Low-Rank Adaptation):** A lightweight fine-tuning method that allows training custom behaviors into models without retraining the whole thing (and melting your GPU in the process).  
+    3. **ControlNet:** A way to guide image diffusion models by conditioning them with additional inputs like edge maps, depth maps, etc. Essential for structure-aware generation.
+    """)
+
+    # Training Pipeline
+    st.markdown("#### **Setting Up the Training Pipeline** 🏗️")
+
+    st.write("At this stage, I already had:")
+    st.markdown("✅ Clean image data  \n✅ Text prompts for every image  \n✅ A solid understanding of how Stable Diffusion, ControlNet, LoRA works")
+
+    st.write("Now came the **model training pipeline**, which broke down into a few clear steps:")
+
+    st.markdown("""
+    1. Remember those last 2 columns from my dataset? (Styles, Functional).  
+        I used them to **classify the images** into categories like:  
+        - **Styles:** Modern, Classical, Minimalist, etc.  
+        - **Functional:** Villa, Apartment, Office, etc.  
+        
+        This helped me later when training specific LoRA weights for each category.
+    """)
+
+    st.markdown("""
+    2. Using [SDXL LoRA fine-tuning script](https://github.com/huggingface/diffusers/blob/main/examples/text_to_image/train_text_to_image_lora_sdxl.py) provided by HuggingFace Diffusers library. I setup my training config like this:
+    """)
+    st.code('''
+    accelerate launch --mixed_precision="fp16" train_text_to_image.py \\
+    --pretrained_model_name_or_path=$MODEL_NAME \\
+    --train_data_dir=$TRAIN_DIR \\
+    --use_ema \\
+    --resolution=1024 --center_crop --random_flip \\
+    --train_batch_size=1 \\
+    --gradient_accumulation_steps=4 \\
+    --gradient_checkpointing \\
+    --max_train_steps=15000 \\
+    --enable_xformers_memory_efficient_attention \\
+    --learning_rate=1e-05 \\
+    --max_grad_norm=1 \\
+    --lr_scheduler="constant" --lr_warmup_steps=0 \\
+    --output_dir="path/name_of_the_model"
+    ''', language='bash')
+
+    st.markdown("""
+    3. After running **20+ fine-tuning sessions (cost me 15$)**, I gathered all the trained LoRA weights and uploaded them into two Hugging Face repositories:  
+        - [Functional LoRA models](https://huggingface.co/harrydawitch/exterior-lora-functionality-model)  
+        - [Style LoRA models](https://huggingface.co/harrydawitch/exterior_lora_style_models)
+    """)
+
+    st.info("💬 *Note: After I finished the initial version of the project, my friend gave me feedback that the model wasn’t generating realistic looking images. So, I collected high-quality, high-resolution architecture images and fine-tuned the model again for realism. Here's the improved model: [Realism Enhancement](https://huggingface.co/harrydawitch/realism-enhancement)*")
+
+    st.write("And that’s it for the **Model Development Phase**. Thanks to the HuggingFace community and the open-source ecosystem. Because of them, I didn’t have to build everything from scratch.")
+
+    # Deployment Section
+    st.subheader(":blue[4. Deployment]")
+
+    st.write("I finally felt a sense of relief after everything I had been through. But now came the most important phase. Getting the model into the hands of real users.")
+
+    st.write("To do that, I had two main goals:")
+    st.markdown("""
+    - **Build a user interface (UI)** so architects can interact with the model easily.  
+    - **Deploy the model** to a compute environment that could handle heavy GPU tasks and scale with usage.
+    """)
+
+    st.write("For the UI I used Streamlit framework to build a simple UI. Because I’m not a web dev. Writing HTML/CSS is not really my jam. The interface has just a few key inputs — nothing fancy, but it gets the job done. It basically asks users to upload their image, select style and functional, define prompt to guide the model and some advanced config and lastly a generate button.")
+
+    st.markdown("> *Take a look at my UI: [https://huggingface.co/spaces/harrydawitch/ArchIntelligent](https://huggingface.co/spaces/harrydawitch/ArchIntelligent)*")
+
+    st.write("When it came to deployment, I had two options:")
+    st.markdown("""
+    - **Pay** for fast inference (but expensive)  
+    - **Go Free** (slow, but budget-friendly… and by budget I mean zero)
+    """)
+
+    st.write("Fortunately my friend does have RTX4060 - 8GB VRAM. Which is just enough to run Stable Diffusion XL. So, I chose the **free route** (I’m literally broke and really need a job 😅).")
+
+    st.write("But what about other architecture students who also can't afford a GPU? So I explored several options: **AWS, Runpod, HuggingFace Spaces, Google Colab**")
+
+    st.markdown("""
+    - First I planned to deploy my model on AWS because they offer the **12-month free tier**.  
+    But then I found out the EC2 Free Tier only includes **CPU**, not GPU.
+    - Second I switched my focus to Runpod and HuggingFace. They don't offer free GPU but they do have discounts.For Runpod T4 GPU with 16GB VRAM costs around 0.17/hour → roughly 4/day or 120/month.  
+    This is actually a really good deal only for people that have a job, not me For HuggingFace it's even worse… 0.4/hour. Passed.
+
+    - So… Google Colab became my final choice. It offers **free T4 GPUs** with some limitations, but it works!  
+    The only downside is ArchIntelligent on Colab **doesn’t have a UI**, so it’s kinda ugly and harder to interact with. But hey it’s free, can’t complain.
+    """)
+
+    st.markdown("> *Try the Colab version lol: [ArchIntelligent on Colab](https://colab.research.google.com/github/harrydawitch/ArchIntelligent/blob/master/run_on_colab.ipynb)*")
+
+st.markdown("---")
+    # Final Thoughts
+st.title("Final Thoughts")
+
+st.write("Looking back, this project was *way* more than just a technical challenge. It was messy, confusing, overwhelming at times but also incredibly rewarding. I didn’t start with all the answers. In fact, I didn’t even know what questions to ask at first.")
+st.write("But through every late night, broken script, failed model run, and \"wtf am I doing?\" moment, I learned to lean into curiosity and keep pushing forward.")
+
+st.write("What started as a casual conversation with a high school friend turned into a full-blown AI product, built from scratch, with zero budget, using mostly free tools and an unhealthy amount of coffee.")
+
+st.write("The truth is, I’m not a professional architect.")
+
+st.write("I’m just a guy who loves solving problems and building things that (hopefully) make life a little easier for others. **ArchIntelligent** is far from perfect. But it’s real. And it’s just the beginning")
+
+st.write("If this project helps even a few architecture students save time, unlock their creativity, or bring their vision to life more easily. Then all the sleepless nights were 100% worth it.")
+
+st.markdown("Thanks for reading 💙")
