@@ -37,6 +37,7 @@ st.markdown(
         <img src="https://img.icons8.com/ios-glyphs/30/000000/github.png" alt="GitHub Repo" style="vertical-align:middle; margin-right:10px;"/>
         View on GitHub
     </a>
+
     """,
     unsafe_allow_html=True
 )
@@ -57,7 +58,7 @@ st.markdown("""
 
 with st.container(border= True):
     # Overview
-    st.markdown("## **Overview** 📌")
+    st.title("**Overview** 📌")
     st.markdown("""
     **ArchIntelligent** is an end-to-end Generative AI solution for designing both **exterior** and **interior** of buildings.  
     It assists architects throughout their workflow, helping them save time, explore new ideas faster, and boost their creativity.
@@ -66,9 +67,6 @@ with st.container(border= True):
     overview_img = load_image("assets/images/meme1.png")
     st.image(overview_img, use_container_width=False, width= 700)
 
-c1, c2= st.columns([0.4,0.6], border= True)
-
-with c1:
     # Motivation
     st.markdown("### **Motivation** ✨")
     st.markdown("""
@@ -84,7 +82,6 @@ with c1:
     But like I said, I love solving problems. So from that very night, I jumped straight into this project.
     """)
 
-with c2:
     # Problem & Solution
     st.markdown("### The Problem & Solution 💡")
     st.markdown("""
@@ -94,7 +91,8 @@ with c2:
     Architects handle so many tasks on a daily basis. click the button below to see:
     """)
 
-    st.image(image="assets/images/architect_workflow.png", width= 550)
+    expanded = st.expander("Click to see", expanded= False)
+    expanded.image(image=load_image("assets/images/architect_workflow.png"), width= 550)
 
     st.markdown("""
     And the list goes on...
@@ -104,16 +102,19 @@ with c2:
 
     That’s where an **AI architecture model** comes in handy — it generates multiple design variations in just **minutes**,
     dramatically speeding up the iteration process and making room for more creativity and less burnout.
-
-    *To Do: Add a diagram of the architect workflow and client + solution*
     """)
+    
+    c1, c2 = st.columns(2)
+    c1.image(load_image("assets/images/normal_workflow.png"), caption="Normal workflow...very time consuming")
+    c2.image(load_image("assets/images/smart_workflow.png"), caption="Smart workflow, reduce time, allow more ideas")
+
 
 st.text("\n")
 st.text("\n")
 st.text("\n")
 
 with st.container(border= True):
-    st.title("⚒️ ArchIntelligent’s Workflows")
+    st.title("ArchIntelligent’s Workflows ⚒️")
 
     st.markdown("---")
 
@@ -141,7 +142,7 @@ with st.container(border= True):
 
     GANs suffer from an issue called [**Mode Collapse**](https://en.wikipedia.org/wiki/Mode_collapse), where the model fails to generate diverse outputs and ends up producing very similar or even identical results.
     """)
-
+    
     st.write("**So I decided to narrow my focus:**")
 
     st.markdown("""
@@ -161,6 +162,8 @@ with st.container(border= True):
 
     It was a massive unlock.
     """)
+    st.image(load_image("assets/images/research_meme.jpg"), width= 350)
+
     
     st.markdown("---")
 
@@ -213,7 +216,7 @@ with st.container(border= True):
 
     It let me scrape as many images as I needed **without getting blocked** and even ran scraping jobs on the **cloud**, so I could pull data in parallel. It saved me a lot of time and stress.
     """)
-    st.caption("TODO: Insert meme image here")
+    st.image(load_image("assets/images/scraping_meme.jpg"), width= 350)
     st.text("Hooray🎉🍾 I got the data, could I jump straight into the training phase? \nNOPE !! The data that I got at that time, looked messy and unrelated.")
 
 
@@ -281,6 +284,7 @@ with st.container(border= True):
 
     Each building folder containing multiple images from different angles and environments. While the **Architecture Language** and **Client Needs** stayed the same across images of the same building, the **General Description** varied depending on the image angle, lighting, and surroundings.
     """)
+    st.image(load_image("assets/images/data_collection_workflow.png"), use_container_width= True, caption="Data pipeline's workflow")
     
     st.markdown("---")
     st.subheader(":blue[3. Model Development]")
@@ -385,7 +389,7 @@ with st.container(border= True):
     """)
 
     st.markdown("> *Try the Colab version lol: [ArchIntelligent on Colab](https://colab.research.google.com/github/harrydawitch/ArchIntelligent/blob/master/run_on_colab.ipynb)*")
-
+    st.image(load_image("assets/images/no_money.jpg"),)
 st.markdown("---")
     # Final Thoughts
 st.title("Final Thoughts")
