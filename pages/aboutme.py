@@ -44,11 +44,11 @@ st.caption("My technical & other skills")
 st.markdown("""
     <style>
     .category-box {
-        border: 1px solid #444;
+        border: 1px solid var(--secondary-background-color);
         border-radius: 12px;
         padding: 20px;
         margin-bottom: 25px;
-        background-color: #111;
+        background-color: var(--background-color);
     }
     .category-title {
         font-size: 1.5rem;
@@ -57,6 +57,7 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 10px;
+        color: var(--text-color);
     }
     .tags {
         display: flex;
@@ -65,8 +66,8 @@ st.markdown("""
     }
     .tag {
         background-color: transparent;
-        color: white;
-        border: 1px solid #888;
+        color: var(--text-color);
+        border: 1px solid var(--text-color);
         border-radius: 8px;
         padding: 6px 12px;
         font-size: 0.95rem;
@@ -74,6 +75,7 @@ st.markdown("""
     }
     </style>
 """, unsafe_allow_html=True)
+
 
 # ----- Skill Data -----
 skills = {
